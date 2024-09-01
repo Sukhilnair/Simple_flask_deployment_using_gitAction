@@ -88,4 +88,5 @@ After a successful push to the main branch, the GitHub Actions workflow will aut
 2. Deploy the Flask app to your EC2 instance.
 3. Run the run.sh script to start the application on the server.
 
-![Final output](relative/path/to/image.png)
+## Final Output
+![Final output](./gitAction.jpg)
