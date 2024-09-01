@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GIT_REPO: "https://github.com/Sukhilnair/Simple_flask_deployment_using_jenkins.git"
+      GIT_REPO: "https://github.com/Sukhilnair/Simple_flask_deployment_using_gitAction.git"
       EC2_USER: 'ubuntu'
       EC2_HOST: '3.109.88.225'
       DEPLOY_DIR: '/home/ubuntu/flask-app'
