@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      GIT_REPO: "https://github.com/Sukhilnair/Simple_flask_deployment_using_jenkins.git"
+      EC2_USER: 'ubuntu'
+      EC2_HOST: '3.109.88.225'
+      DEPLOY_DIR: '/home/ubuntu/flask-app'
+      SSH_CRED_ID: ${{ secrets.EC2_SSH_KEY }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          . venv/bin/activate
+          pytest app_test.py
+        continue-on-error: false
+
+      - name: Deploy to EC2
+        if: success()
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          scp -o StrictHostKeyChecking=no -r . ${EC2_USER}@${EC2_HOST}:${DEPLOY_DIR}
+          ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "cd ${DEPLOY_DIR} && sudo bash run.sh"
