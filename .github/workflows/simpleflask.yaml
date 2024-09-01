@@ -44,5 +44,5 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add <(echo "$SSH_PRIVATE_KEY")
-          scp -o StrictHostKeyChecking=no -r . ${EC2_USER}@${EC2_HOST}:${DEPLOY_DIR}
+          scp -o StrictHostKeyChecking=no -r * ${EC2_USER}@${EC2_HOST}:${DEPLOY_DIR}
           ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "cd ${DEPLOY_DIR} && sudo bash run.sh"
